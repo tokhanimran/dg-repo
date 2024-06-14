@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Fri Jun 14 10:19:30 EDT 2024
+org.apache.sling.commons.classloader-1.4.2.jar>central=
+org.apache.sling.commons.classloader-1.4.2.pom>central=

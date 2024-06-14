@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Fri Jun 14 10:22:15 EDT 2024
+dollargeneral.it.tests-1.0.0-SNAPSHOT.jar>=
+dollargeneral.it.tests-1.0.0-SNAPSHOT.pom>=
+dollargeneral.it.tests-1.0.0-SNAPSHOT-jar-with-dependencies.jar>=

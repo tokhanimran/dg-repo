@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>com.adobe.cq.cloud</groupId>
+  <artifactId>com.adobe.cq.cloud.testing.ui.cypress.tests</artifactId>
+  <versioning>
+    <lastUpdated>20240614141823</lastUpdated>
+    <snapshot>
+      <localCopy>true</localCopy>
+    </snapshot>
+    <snapshotVersions>
+      <snapshotVersion>
+        <classifier>ui-test-docker-context</classifier>
+        <extension>tar.gz</extension>
+        <value>0.0.1-SNAPSHOT</value>
+        <updated>20240614141823</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>0.0.1-SNAPSHOT</value>
+        <updated>20240614141823</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+  <version>0.0.1-SNAPSHOT</version>
+</metadata>

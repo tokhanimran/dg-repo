@@ -1,0 +1,705 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.apache.jackrabbit.vault</groupId>
+    <artifactId>parent</artifactId>
+    <version>3.7.2</version>
+    <relativePath></relativePath>
+  </parent>
+  <groupId>org.apache.jackrabbit</groupId>
+  <artifactId>filevault-package-maven-plugin</artifactId>
+  <version>1.3.6</version>
+  <packaging>maven-plugin</packaging>
+  <name>Apache Jackrabbit FileVault - Package Maven Plugin</name>
+  <description>Maven Plugin supporting creation of content packages.</description>
+  <url>https://jackrabbit.apache.org/filevault-package-maven-plugin/</url>
+  <licenses>
+    <license>
+      <name>Apache-2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <prerequisites>
+    <maven>3.3.9</maven>
+  </prerequisites>
+  <scm>
+    <connection>scm:git:https://gitbox.apache.org/repos/asf/jackrabbit-filevault-package-maven-plugin.git</connection>
+    <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/jackrabbit-filevault-package-maven-plugin.git</developerConnection>
+    <tag>filevault-package-maven-plugin-1.3.6</tag>
+    <url>https://github.com/apache/jackrabbit-filevault-package-maven-plugin/tree/${project.scm.tag}</url>
+  </scm>
+  <ciManagement>
+    <system>Jenkins</system>
+    <url>https://ci-builds.apache.org/blue/organizations/jenkins/Jackrabbit%2Ffilevault-package-maven-plugin/activity</url>
+  </ciManagement>
+  <distributionManagement>
+    <site>
+      <id>jackrabbit.filevault.site-deploy</id>
+      <url>scm:svn:https://svn.apache.org/repos/asf/jackrabbit/site/live/filevault-package-maven-plugin-archives/${project.version}</url>
+    </site>
+  </distributionManagement>
+  <properties>
+    <maven.compiler.release>8</maven.compiler.release>
+    <slf4j.version>1.7.5</slf4j.version>
+    <maven.version>3.3.9</maven.version>
+    <filevault.version>${project.parent.version}</filevault.version>
+    <project.build.outputTimestamp>2023-11-13T16:27:09Z</project.build.outputTimestamp>
+    <aether.version>1.0.2.v20150114</aether.version>
+  </properties>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>5.8.2</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.jackrabbit.vault</groupId>
+      <artifactId>org.apache.jackrabbit.vault</artifactId>
+      <version>${filevault.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jackrabbit.vault</groupId>
+      <artifactId>vault-validation</artifactId>
+      <version>${filevault.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.jcr</groupId>
+      <artifactId>jcr</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jackrabbit</groupId>
+      <artifactId>jackrabbit-jcr-commons</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jackrabbit</groupId>
+      <artifactId>oak-jackrabbit-api</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jackrabbit</groupId>
+      <artifactId>jackrabbit-spi-commons</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.framework</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-core</artifactId>
+      <version>${maven.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+      <version>${maven.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact</artifactId>
+      <version>${maven.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-model</artifactId>
+      <version>${maven.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.aether</groupId>
+      <artifactId>aether-api</artifactId>
+      <version>${aether.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.plugin-tools</groupId>
+      <artifactId>maven-plugin-annotations</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+      <version>4.0.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-archiver</artifactId>
+      <version>3.6.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-archiver</artifactId>
+      <version>4.8.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains</groupId>
+      <artifactId>annotations</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <version>${slf4j.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>biz.aQute.bnd</groupId>
+      <artifactId>biz.aQute.bndlib</artifactId>
+      <version>6.4.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>animal-sniffer-maven-plugin</artifactId>
+      <version>1.23</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.maven</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>animal-sniffer</artifactId>
+      <version>1.23</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.github.classgraph</groupId>
+      <artifactId>classgraph</artifactId>
+      <version>4.8.141</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.shared</groupId>
+      <artifactId>maven-common-artifact-filters</artifactId>
+      <version>3.3.2</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.maven</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.plexus</groupId>
+      <artifactId>plexus-build-api</artifactId>
+      <version>0.0.7</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.shared</groupId>
+      <artifactId>maven-filtering</artifactId>
+      <version>3.3.1</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.maven</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-csv</artifactId>
+      <version>1.9.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.shared</groupId>
+      <artifactId>maven-shared-utils</artifactId>
+      <version>3.4.2</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest</artifactId>
+      <version>2.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>4.4.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.shared</groupId>
+      <artifactId>maven-verifier</artifactId>
+      <version>1.8.0</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-embedder</artifactId>
+      <version>${maven.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-compat</artifactId>
+      <version>${maven.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.aether</groupId>
+      <artifactId>aether-connector-basic</artifactId>
+      <version>${aether.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.aether</groupId>
+      <artifactId>aether-transport-wagon</artifactId>
+      <version>${aether.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.shared</groupId>
+      <artifactId>maven-shared-io</artifactId>
+      <version>3.0.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-xml</artifactId>
+      <version>3.0.0</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <repositories>
+    <repository>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>apache.snapshots</id>
+      <name>Apache Development Snapshot Repository</name>
+      <url>https://repository.apache.org/content/repositories/snapshots/</url>
+    </repository>
+  </repositories>
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <filtering>true</filtering>
+        <directory>src/main/resources-filtered</directory>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-plugin-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-descriptor</id>
+            <phase>process-classes</phase>
+            <configuration>
+              <internalJavadocBaseUrl>./apidocs/</internalJavadocBaseUrl>
+              <externalJavadocBaseUrls>
+                <externalJavadocBaseUrl>https://jackrabbit.apache.org/filevault/apidocs/</externalJavadocBaseUrl>
+                <externalJavadocBaseUrl>https://maven.apache.org/shared/maven-archiver/apidocs/</externalJavadocBaseUrl>
+                <externalJavadocBaseUrl>https://docs.oracle.com/javase/8/docs/api/</externalJavadocBaseUrl>
+                <externalJavadocBaseUrl>https://codehaus-plexus.github.io/plexus-utils/apidocs/</externalJavadocBaseUrl>
+                <externalJavadocBaseUrl>https://maven.apache.org/ref/${maven.version}/maven-artifact/apidocs/</externalJavadocBaseUrl>
+                <externalJavadocBaseUrl>https://www.mojohaus.org/animal-sniffer/animal-sniffer/apidocs/</externalJavadocBaseUrl>
+              </externalJavadocBaseUrls>
+            </configuration>
+          </execution>
+          <execution>
+            <id>help-goal</id>
+            <goals>
+              <goal>helpmojo</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.sisu</groupId>
+        <artifactId>sisu-maven-plugin</artifactId>
+        <version>0.3.5</version>
+        <executions>
+          <execution>
+            <id>index-project</id>
+            <goals>
+              <goal>main-index</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-complete-plugin-classpath</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireProvidedDependenciesInRuntimeClasspath implementation="org.apache.sling.maven.enforcer.RequireProvidedDependenciesInRuntimeClasspath">
+                  <excludes>
+                    <exclude>javax.servlet:javax.servlet-api</exclude>
+                    <exclude>*:txw2</exclude>
+                    <exclude>*:woodstox-core</exclude>
+                    <exclude>*:stax2-api</exclude>
+                    <exclude>*:maven-artifact</exclude>
+                    <exclude>*:h2</exclude>
+                    <exclude>org.apache.jackrabbit:jackrabbit-jcr2spi</exclude>
+                    <exclude>org.apache.jackrabbit:jackrabbit-spi2dav</exclude>
+                    <exclude>org.apache.felix:org.apache.felix.configadmin</exclude>
+                    <exclude>org.apache.felix:org.apache.felix.cm.json</exclude>
+                    <exclude>org.apache.felix:org.apache.felix.converter</exclude>
+                    <exclude>org.apache.maven:maven-archiver</exclude>
+                    <exclude>org.codehaus.plexus:plexus-archiver</exclude>
+                    <exclude>org.apache.maven.shared:maven-common-artifact-filters</exclude>
+                    <exclude>org.apache.maven.shared:maven-shared-utils</exclude>
+                    <exclude>org.sonatype.plexus:plexus-build-api</exclude>
+                    <exclude>org.apache.maven.shared:maven-filtering</exclude>
+                    <exclude>org.codehaus.mojo:animal-sniffer-maven-plugin</exclude>
+                    <exclude>biz.aQute.bnd:biz.aQute.bndlib</exclude>
+                    <exclude>org.slf4j:slf4j-api</exclude>
+                    <exclude>org.jetbrains:annotations</exclude>
+                    <exclude>org.eclipse.jdt:org.eclipse.jdt.annotation</exclude>
+                    <exclude>org.osgi:osgi.annotation</exclude>
+                    <exclude>org.osgi:org.osgi.annotation</exclude>
+                    <exclude>org.osgi:org.osgi.annotation.versioning</exclude>
+                    <exclude>org.osgi:org.osgi.service.metatype.annotations</exclude>
+                    <exclude>org.osgi:org.osgi.service.component.annotations</exclude>
+                  </excludes>
+                </requireProvidedDependenciesInRuntimeClasspath>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>maven-enforcer-rules</artifactId>
+            <version>1.2.0</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <artifactId>maven-install-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>install</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+            <configuration>
+              <systemPropertyVariables>
+                <maven.home>${maven.home}</maven.home>
+                <plugin.version>${project.version}</plugin.version>
+              </systemPropertyVariables>
+              <environmentVariables>
+                <JENKINS_MAVEN_AGENT_DISABLED>true</JENKINS_MAVEN_AGENT_DISABLED>
+              </environmentVariables>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <trimStackTrace>false</trimStackTrace>
+          <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory" />
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>filter-site</id>
+            <phase>pre-site</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/site-src</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/site</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>default-testResources</id>
+            <configuration>
+              <addDefaultExcludes>false</addDefaultExcludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-site-plugin</artifactId>
+        <configuration>
+          <generateReports>true</generateReports>
+          <relativizeDecorationLinks>false</relativizeDecorationLinks>
+          <skip>false</skip>
+          <siteDirectory>${project.build.directory}/site-src</siteDirectory>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-scm-publish-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>scm-publish</id>
+            <phase>site-deploy</phase>
+            <goals>
+              <goal>publish-scm</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <content>target/site</content>
+          <checkinComment>@trivial: Site checkin for project ${project.name}-${project.version}</checkinComment>
+          <ignorePathsToDelete>
+            <ignorePathToDelete>apidocs</ignorePathToDelete>
+          </ignorePathsToDelete>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <basedir>${project.basedir}</basedir>
+              <excludesFile>${project.basedir}/.ratignore</excludesFile>
+              <consoleOutput>true</consoleOutput>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <reporting>
+    <plugins>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>javadoc</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      <plugin>
+        <artifactId>maven-plugin-report-plugin</artifactId>
+        <configuration>
+          <hasExtensionsToLoad>true</hasExtensionsToLoad>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <configuration>
+          <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+  <profiles>
+    <profile>
+      <id>jacoco-report</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>prepare-agent-integration</id>
+                <goals>
+                  <goal>prepare-agent-integration</goal>
+                </goals>
+                <configuration>
+                  <append>true</append>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>apache-release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <target>
+                    <mkdir dir="${basedir}/target/${project.version}" />
+                    <copy flatten="true" todir="${basedir}/target/${project.version}">
+                      <fileset dir="${basedir}">
+                        <include name="RELEASE-NOTES.md" />
+                        <include name="target/*-source-release.zip*" />
+                      </fileset>
+                    </copy>
+                    <checksum fileext=".md5" algorithm="MD5">
+                      <fileset dir="${basedir}/target/${project.version}">
+                        <include name="*.zip" />
+                      </fileset>
+                    </checksum>
+                    <checksum fileext=".sha512" algorithm="SHA-512">
+                      <fileset dir="${basedir}/target/${project.version}">
+                        <include name="*.zip" />
+                      </fileset>
+                    </checksum>
+                    <checksum fileext=".sha1" algorithm="SHA">
+                      <fileset dir="${basedir}/target/${project.version}">
+                        <include name="*.zip" />
+                      </fileset>
+                    </checksum>
+                    <checksum file="${basedir}/target/${project.version}/filevault-package-maven-plugin-${project.version}-source-release.zip" property="checksum" algorithm="SHA1" />
+                    <echo file="${basedir}/target/vote.txt">From: ${username}@apache.org
+To: dev@jackrabbit.apache.org
+Subject: [VOTE] Release Apache Jackrabbit FileVault Package Maven Plugin ${project.version}
+
+Hello,
+
+A candidate for the Jackrabbit FileVault Package Maven Plugin ${project.version} release is available at:
+https://dist.apache.org/repos/dist/dev/jackrabbit/filevault-package-maven-plugin/${project.version}/
+
+The release candidate is a zip archive of the sources in:
+https://github.com/apache/jackrabbit-filevault-package-maven-plugin/tree/filevault-package-maven-plugin-${project.version}/
+
+The release notes can be found in JIRA at https://issues.apache.org/jira/projects/JCRVLT/versions/...
+
+The command for running automated checks against this release candidate is:
+$ sh check-release.sh filevault-plugin ${project.version} ${checksum}
+
+A staged Maven repository is available for review at:
+https://repository.apache.org/content/repositories/orgapachejackrabbit-...
+
+Please vote on releasing this package as Apache Jackrabbit FileVault Package Maven Plugin ${project.version}.
+The vote is open for a minimum of 72 hours during business days and passes
+if a majority of at least three +1 Jackrabbit PMC votes are cast.
+The vote fails if not enough votes are cast after 1 week (5 business days).
+
+[ ] +1 Release this package as Apache Jackrabbit FileVault Package Maven Plugin ${project.version}
+[ ] -1 Do not release this package because...${line.separator}</echo>
+                    <echo>The release candidate has been prepared in:
+
+    ${basedir}/target/${project.version}
+
+    Please deploy it to
+    https://dist.apache.org/repos/dist/dev/jackrabbit/filevault-package-maven-plugin:
+
+    cd /path/to/jackrabbit-dev/filevault-package-maven-plugin
+    mv ${basedir}/target/${project.version} ${project.version}
+    svn add ${project.version}
+    svn commit -m 'Apache Jackrabbit FileVault Package Maven Plugin ${project.version} release candidate' ${project.version}
+
+    A release vote template has been generated for you:
+
+    file://${basedir}/target/vote.txt</echo>
+                    <echo />
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
